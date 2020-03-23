@@ -1,7 +1,7 @@
 """
-fbsearchposts v.01a
+fbsearchposts v.02a
 by GL Osborne
-Last updated: 3/18/2020
+Last updated: 3/23/2020
 
 Python command line program. Takes specific posts out of Facebook download file for a user's posts
 and outputs them to a text file.
@@ -88,7 +88,7 @@ def printfile(contents):
 
     # Searches JSON for posts and prints results to text file
 
-    searchterm = input('Please enter your search term and press Enter: ')
+    searchterm = str(input('Please enter your search term and press Enter: '))
 
     if searchterm:
 
@@ -99,26 +99,23 @@ def printfile(contents):
         with open(textfilename, 'w') as f:
 
             for entry in contents:
+                # make sure the entry is a post to user's own timeline
                 try:
-                    entry['attachments']
-                except:
-                    try:
-                        # make sure the entry is a post to user's own timeline
-                        if str('timeline.') not in entry['status']:
-                            e = entry['data'][0]['post']
-                            e = str(e)
-                            e_upper = e.upper()
+                    if str('timeline.') not in entry['status']:
+                        e = entry['data'][0]['post']
+                        e = str(e)
+                        e_upper = e.upper()
 
-                            # look for search term and print
-                            if (e != '') and (searchterm.upper() in e_upper):
-                                # convert timestamp
-                                t = time.ctime(entry['timestamp'])
-                                # write file
-                                f.write(t + '\n\n')
-                                f.write(e + '\n\n----------\n\n')
-                                i = i + 1
-                    except:
-                        continue
+                        # look for search term and print
+                        if (e != '') and (searchterm.upper() in e_upper):
+                            # convert timestamp
+                            t = time.ctime(entry['timestamp'])
+                            # write file
+                            f.write(t + '\n\n')
+                            f.write(e + '\n\n----------\n\n')
+                            i = i + 1
+                except:
+                    continue
 
         # Clean up files and return "finished" notices
         if i > 0:
